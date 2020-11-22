@@ -5,7 +5,7 @@ const Calculator = () => {
   return (
     <div id="calculator">
       <h1>
-        <i class="fab fa-free-code-camp"></i> Calculator
+        <i className="fab fa-free-code-camp"></i> Calculator
       </h1>
       <Display />
       <Keyboard />

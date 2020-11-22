@@ -1,5 +1,3 @@
-import Button from './Button';
-
 const keys = [
   { display: 'C', special: 'clearBtn' },
   { display: '/' },
@@ -23,8 +21,15 @@ const keys = [
 const Keyboard = () => {
   return (
     <div id="keyboard">
-      {keys.map((key) => (
-        <Button key={key} {...key} />
+      {keys.map(({ display, special }, index) => (
+        <div
+          key={index}
+          id={special ? special : null}
+          className={'button'}
+          onClick={() => console.log(display)}
+        >
+          {display}
+        </div>
       ))}
     </div>
   );
