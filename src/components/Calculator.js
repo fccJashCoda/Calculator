@@ -4,12 +4,12 @@ import Keyboard from './Keyboard';
 
 const Calculator = () => {
   const [rpn, setRPN] = useState('');
-  const [operands, setOperatnds] = useState([]);
-  const [operators, setOperators] = useState([]);
-  const [operation, setOperation] = useState('7777');
+  // const [operation, setOperation] = useState('7777');
+  const [operation, setOperation] = useState(['7777']);
   const [currentOp, setCurrentOp] = useState('7');
   const [temp, setTemp] = useState('');
   const [isDecimal, setIsDecimal] = useState(false);
+  const [isNegative, setIsNegative] = useState(false);
 
   const toRPN = () => {};
 
@@ -17,11 +17,13 @@ const Calculator = () => {
     const operatorLogic = () => {
       if (!temp) {
         setCurrentOp(`${key}`);
-        setOperation(`${operation}${key}`);
+        // setOperation(`${operation}${key}`);
+        setOperation([...operation, ...key]);
       } else if (temp && temp !== key) {
         setCurrentOp(`${key}`);
         setOperation(
-          `${operation.slice(0, operation.length - temp.length)}${key}`
+          // `${operation.slice(0, operation.length - temp.length)}${key}`
+          [...operation.slice(0, operation.length - temp.length), ...key]
         );
       }
       setIsDecimal(false);
@@ -38,7 +40,7 @@ const Calculator = () => {
       case '.':
         if (!isDecimal) {
           setCurrentOp(`${currentOp}${key}`);
-          setOperation(`${operation}${key}`);
+          setOperation([...operation, ...key]);
           setIsDecimal(true);
         }
         break;
@@ -54,13 +56,13 @@ const Calculator = () => {
       case '-':
         if (!temp) {
           setCurrentOp(`${key}`);
-          setOperation(`${operation}${key}`);
+          setOperation([...operation, ...key]);
         } else if (temp && temp !== key) {
           setCurrentOp(`${key}`);
         }
         setIsDecimal(false);
         if (temp.length < 2 && temp !== key) {
-          setOperation(`${operation}${key}`);
+          setOperation([...operation, ...key]);
           setTemp(temp + key);
         }
         break;
@@ -75,10 +77,12 @@ const Calculator = () => {
         } else {
           setCurrentOp(currentOp + key);
         }
-        setOperation(operation + key);
+        setOperation([...operation, ...key]);
         break;
     }
   };
+
+  console.log(operation);
 
   return (
     <div id="calculator">
