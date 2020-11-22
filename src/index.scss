@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -22,13 +26,12 @@ code {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #ccc;
+  background: rgba(58, 60, 137, 1);
 }
 
 #calculator {
   width: 15em;
-  height: 20em;
-  background: #333;
+  background: rgba(19, 18, 50, 1);
 
   h1 {
     font-size: 0.7em;
@@ -37,16 +40,63 @@ code {
   }
 
   #display {
+    display: grid;
+    grid-template-rows: repeat(2, minmax(auto, auto));
+    padding: 0.5em;
+    text-align: right;
     width: 100%;
-    height: 4em;
-    background: #fff;
+    min-height: 4em;
+    background: rgba(5, 6, 26, 1);
+    color: orange;
+    word-break: break-word;
+
+    & #operation {
+      margin: 0;
+      font-size: 0.9em;
+      min-height: 2.7em;
+    }
+    & #currentOp {
+      margin: 0.5em 0 0 0;
+    }
   }
 
   #keyboard {
+    user-select: none;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(5, 1fr);
+    grid-template-rows: repeat(5, minmax(4em, auto));
     height: 100%;
     gap: 0.1em;
+    font-weight: 500;
+  }
+}
+
+.button {
+  cursor: pointer;
+  background: rgba(23, 22, 56, 1);
+  border-radius: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+
+  &:active {
+    transform: scale(0.99);
+    filter: brightness(129%);
+  }
+
+  &#clearBtn {
+    grid-column: 1/3;
+    background: red !important;
+  }
+
+  &#zeroBtn {
+    grid-column: 1/3;
+  }
+
+  &#equalBtn {
+    grid-column: 4/5;
+    grid-row: 4/6;
+    background: rgba(253, 117, 20, 1) !important;
   }
 }
