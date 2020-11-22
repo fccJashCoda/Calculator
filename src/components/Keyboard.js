@@ -18,7 +18,7 @@ const keys = [
   { display: '=', special: 'equalBtn' },
 ];
 
-const Keyboard = () => {
+const Keyboard = ({ action }) => {
   return (
     <div id="keyboard">
       {keys.map(({ display, special }, index) => (
@@ -26,7 +26,7 @@ const Keyboard = () => {
           key={index}
           id={special ? special : null}
           className={'button'}
-          onClick={() => console.log(display)}
+          onClick={() => action(display)}
         >
           {display}
         </div>

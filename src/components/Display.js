@@ -1,8 +1,8 @@
-const Display = () => {
+const Display = ({ operation, currentOp }) => {
   return (
     <div id="display">
-      <p id="operation"></p>
-      <h3 id="currentOp"></h3>
+      <p id="operation">{operation}</p>
+      <h3 id="currentOp">{currentOp}</h3>
     </div>
   );
 };
