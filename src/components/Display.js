@@ -1,10 +1,7 @@
-const Display = ({ operation, currentOp, isNegative, operationString }) => {
-  console.log(operationString);
-  // const display = `${operation.join('')}${isNegative ? '-' : ''}`;
-  const display = `1`;
+const Display = ({ operation, currentOp }) => {
   return (
     <div id="display">
-      <p id="operation">{display}</p>
+      <p id="operation">{operation}</p>
       <h3 id="currentOp">{currentOp}</h3>
     </div>
   );

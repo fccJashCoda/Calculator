@@ -4,14 +4,14 @@ import Keyboard from './Keyboard';
 
 const Calculator = () => {
   const [rpn, setRPN] = useState('');
-  const [operationString, setOperationString] = useState('');
+  // const [operationString, setOperationString] = useState('');
   // const [operation, setOperation] = useState([]);
   const [operation, setOperation] = useState('');
   const [expression, setExpression] = useState('');
   const [currentOp, setCurrentOp] = useState('');
   const [temp, setTemp] = useState('');
   const [isDecimal, setIsDecimal] = useState(false);
-  const [isNegative, setIsNegative] = useState(false);
+  // const [isNegative, setIsNegative] = useState(false);
 
   const toRPN = () => {};
 
@@ -99,19 +99,25 @@ const Calculator = () => {
       if (!temp && operation.length) {
         setCurrentOp(`${key}`);
         setOperation(`${operation}${key}`);
-      } else if (temp && temp[0] !== key) {
+        setExpression(`${expression} ${key} `);
+        setTemp(key);
+      } else if (temp && temp[0] !== key && operation.length > 1) {
         setCurrentOp(`${key}`);
         setOperation(
           `${operation.slice(0, operation.length - temp.length)}${key}`
         );
+        setExpression(
+          `${expression.slice(0, expression.length - temp.length - 2)} ${key} `
+        );
+        setTemp(key);
       }
       setIsDecimal(false);
-      setTemp(key);
     };
 
     switch (key) {
       case 'C':
         setOperation('');
+        setExpression('');
         setCurrentOp('');
         setTemp('');
         setIsDecimal(false);
@@ -133,9 +139,15 @@ const Calculator = () => {
           setTemp(key);
           setCurrentOp(`${key}`);
           setOperation(`${operation}${key}`);
+          if (operation.length) {
+            setExpression(`${expression} ${key} `);
+          } else {
+            setExpression(`${expression}${key}`);
+          }
         } else if (temp && temp !== key && temp.length < 2) {
           setCurrentOp(`${key}`);
           setOperation(`${operation}${key}`);
+          setExpression(`${expression}${key}`);
           setTemp(temp + key);
         }
         setIsDecimal(false);
@@ -145,31 +157,23 @@ const Calculator = () => {
         break;
       default:
         if (temp) {
-          console.log(temp);
           setCurrentOp(`${key}`);
           setTemp('');
         } else {
           setCurrentOp(currentOp + key);
         }
         setOperation(`${operation}${key}`);
+        setExpression(`${expression}${key}`);
         break;
     }
   };
 
-  console.log('expression', expression);
-  console.log('operation', operation);
-  // console.log(currentOp);
   return (
     <div id="calculator">
       <h1>
         <i className="fab fa-free-code-camp"></i> Calculator
       </h1>
-      <Display
-        operation={operation}
-        currentOp={currentOp}
-        isNegative={isNegative}
-        operationString={operationString}
-      />
+      <Display operation={operation} currentOp={currentOp} />
       <Keyboard action={handleInput} />
     </div>
   );
