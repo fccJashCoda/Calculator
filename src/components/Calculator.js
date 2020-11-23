@@ -3,99 +3,22 @@ import Display from './Display';
 import Keyboard from './Keyboard';
 
 const Calculator = () => {
-  const [rpn, setRPN] = useState('');
-  // const [operationString, setOperationString] = useState('');
-  // const [operation, setOperation] = useState([]);
   const [operation, setOperation] = useState('');
   const [expression, setExpression] = useState('');
   const [currentOp, setCurrentOp] = useState('');
   const [temp, setTemp] = useState('');
   const [isDecimal, setIsDecimal] = useState(false);
-  // const [isNegative, setIsNegative] = useState(false);
 
-  const toRPN = () => {};
-
-  // const handleInput = (key) => {
-  //   const operatorLogic = () => {
-  //     if (!temp) {
-  //       console.log('currentOP', currentOp);
-  //       setOperation([...operation, currentOp]);
-  //       setCurrentOp(`${key}`);
-  //       setOperationString(`${operationString}${key}`);
-  //       // setOperation([...operation, ...key]);
-  //     } else if (temp && temp !== key) {
-  //       setIsNegative(false);
-  //       setCurrentOp(`${key}`);
-  //       // setOperation(
-  //       //   // `${operation.slice(0, operation.length - temp.length)}${key}`
-  //       //   [...operation.slice(0, operation.length - temp.length), ...key]
-  //       // );
-  //       setOperationString(
-  //         `${operation.slice(0, operation.length - temp.length)}${key}`
-  //       );
-  //     }
-  //     setIsDecimal(false);
-  //     setTemp(key);
-  //   };
-
-  //   switch (key) {
-  //     case 'C':
-  //       setExpression('');
-  //       setOperation([]);
-  //       setOperationString('');
-  //       setCurrentOp('');
-  //       setTemp('');
-  //       setIsDecimal(false);
-  //       setIsNegative(false);
-  //       break;
-  //     case '.':
-  //       if (!isDecimal) {
-  //         setCurrentOp(`${currentOp}${key}`);
-  //         setOperationString(`${operationString}${key}`);
-  //         setIsDecimal(true);
-  //       }
-  //       break;
-  //     case '+':
-  //     case '/':
-  //     case '*':
-  //       operatorLogic();
-  //       break;
-  //     case '-':
-  //       if (!temp) {
-  //         setCurrentOp(`${key}`);
-  //         setOperation([...operation, currentOp]);
-  //         setOperationString(`${operationString}${key}`);
-  //       } else if (temp && temp !== key) {
-  //         setIsNegative(true);
-  //         // setCurrentOp(`${key}`);
-  //       }
-  //       setIsDecimal(false);
-  //       break;
-  //     case '=':
-  //       setOperation([...operation, currentOp]);
-  //       break;
-  //     default:
-  //       if (isNegative) {
-  //         key = '-' + key;
-  //         setIsNegative(false);
-  //       }
-  //       if (temp) {
-  //         console.log('temp', temp);
-  //         setOperation([...operation, temp]);
-  //         setExpression(`${expression} ${temp} `);
-  //         setCurrentOp(`${key}`);
-  //         setTemp('');
-  //       } else {
-  //         setExpression(`${expression}${key}`);
-  //         setCurrentOp(currentOp + key);
-  //       }
-  //       setOperationString(`${operationString}${key}`);
-  //       break;
-  //   }
-  // };
+  const evaluate = (exp) => {
+    const expArray = exp.trim().split(' ');
+    console.log(expArray);
+  };
 
   const handleInput = (key) => {
     const operatorLogic = () => {
+      if (operation[operation.length - 1] === '.') {
+        return;
+      }
       if (!temp && operation.length) {
         setCurrentOp(`${key}`);
         setOperation(`${operation}${key}`);
@@ -126,6 +49,7 @@ const Calculator = () => {
         if (!isDecimal) {
           setCurrentOp(`${currentOp}${key}`);
           setOperation(`${operation}${key}`);
+          setExpression(`${expression}${key}`);
           setIsDecimal(true);
         }
         break;
@@ -135,6 +59,9 @@ const Calculator = () => {
         operatorLogic();
         break;
       case '-':
+        if (operation[operation.length - 1] === '.') {
+          return;
+        }
         if (!temp) {
           setTemp(key);
           setCurrentOp(`${key}`);
@@ -153,21 +80,34 @@ const Calculator = () => {
         setIsDecimal(false);
         break;
       case '=':
-        console.log(toRPN(operation));
+        if (temp) {
+          console.log(
+            evaluate(expression.slice(0, expression.length - temp.length - 2))
+          );
+        } else {
+          console.log(evaluate(expression));
+        }
         break;
       default:
         if (temp) {
           setCurrentOp(`${key}`);
           setTemp('');
+          setOperation(`${operation}${key}`);
+          setExpression(`${expression}${key}`);
+        } else if (currentOp.length === 1 && currentOp[0] === '0') {
+          setCurrentOp(key);
+          setOperation(`${operation.slice(0, operation.length - 1)}${key}`);
+          setExpression(`${expression.slice(0, expression.length - 1)}${key}`);
         } else {
           setCurrentOp(currentOp + key);
+          setOperation(`${operation}${key}`);
+          setExpression(`${expression}${key}`);
         }
-        setOperation(`${operation}${key}`);
-        setExpression(`${expression}${key}`);
         break;
     }
   };
-
+  console.log(expression);
+  console.log('current', currentOp);
   return (
     <div id="calculator">
       <h1>
