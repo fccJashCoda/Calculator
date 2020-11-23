@@ -4,9 +4,9 @@ import Keyboard from './Keyboard';
 
 const Calculator = () => {
   const [rpn, setRPN] = useState('');
-  // const [operation, setOperation] = useState('7777');
-  const [operation, setOperation] = useState(['7777']);
-  const [currentOp, setCurrentOp] = useState('7');
+  const [operationString, setOperationString] = useState('');
+  const [operation, setOperation] = useState([]);
+  const [currentOp, setCurrentOp] = useState('');
   const [temp, setTemp] = useState('');
   const [isDecimal, setIsDecimal] = useState(false);
   const [isNegative, setIsNegative] = useState(false);
@@ -16,14 +16,20 @@ const Calculator = () => {
   const handleInput = (key) => {
     const operatorLogic = () => {
       if (!temp) {
+        console.log('currentOP', currentOp);
+        setOperation([...operation, currentOp]);
         setCurrentOp(`${key}`);
-        // setOperation(`${operation}${key}`);
-        setOperation([...operation, ...key]);
+        setOperationString(`${operationString}${key}`);
+        // setOperation([...operation, ...key]);
       } else if (temp && temp !== key) {
+        setIsNegative(false);
         setCurrentOp(`${key}`);
-        setOperation(
-          // `${operation.slice(0, operation.length - temp.length)}${key}`
-          [...operation.slice(0, operation.length - temp.length), ...key]
+        // setOperation(
+        //   // `${operation.slice(0, operation.length - temp.length)}${key}`
+        //   [...operation.slice(0, operation.length - temp.length), ...key]
+        // );
+        setOperationString(
+          `${operation.slice(0, operation.length - temp.length)}${key}`
         );
       }
       setIsDecimal(false);
@@ -32,64 +38,70 @@ const Calculator = () => {
 
     switch (key) {
       case 'C':
-        setOperation('');
+        setOperation([]);
+        setOperationString('');
         setCurrentOp('');
         setTemp('');
         setIsDecimal(false);
+        setIsNegative(false);
         break;
       case '.':
         if (!isDecimal) {
           setCurrentOp(`${currentOp}${key}`);
-          setOperation([...operation, ...key]);
+          setOperationString(`${operationString}${key}`);
           setIsDecimal(true);
         }
         break;
       case '+':
-        operatorLogic();
-        break;
       case '/':
-        operatorLogic();
-        break;
       case '*':
         operatorLogic();
         break;
       case '-':
         if (!temp) {
           setCurrentOp(`${key}`);
-          setOperation([...operation, ...key]);
+          setOperation([...operation, currentOp]);
+          setOperationString(`${operationString}${key}`);
         } else if (temp && temp !== key) {
-          setCurrentOp(`${key}`);
+          setIsNegative(true);
+          // setCurrentOp(`${key}`);
         }
         setIsDecimal(false);
-        if (temp.length < 2 && temp !== key) {
-          setOperation([...operation, ...key]);
-          setTemp(temp + key);
-        }
         break;
       case '=':
-        console.log(toRPN(operation));
+        setOperation([...operation, currentOp]);
         break;
       default:
+        if (isNegative) {
+          key = '-' + key;
+          setIsNegative(false);
+        }
         if (temp) {
-          console.log(temp);
+          console.log('temp', temp);
+          setOperation([...operation, temp]);
           setCurrentOp(`${key}`);
           setTemp('');
         } else {
           setCurrentOp(currentOp + key);
         }
-        setOperation([...operation, ...key]);
+        setOperationString(`${operationString}${key}`);
         break;
     }
   };
 
-  console.log(operation);
-
+  console.log('operation', operation);
+  // console.log(currentOp);
   return (
     <div id="calculator">
       <h1>
         <i className="fab fa-free-code-camp"></i> Calculator
       </h1>
-      <Display operation={operation} currentOp={currentOp} />
+      <Display
+        operation={operation}
+        currentOp={currentOp}
+        isNegative={isNegative}
+        operationString={operationString}
+      />
       <Keyboard action={handleInput} />
     </div>
   );
