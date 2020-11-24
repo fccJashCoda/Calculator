@@ -5,7 +5,7 @@ import Keyboard from './Keyboard';
 const Calculator = () => {
   const [operation, setOperation] = useState('');
   const [expression, setExpression] = useState('');
-  const [currentOp, setCurrentOp] = useState('');
+  const [currentOp, setCurrentOp] = useState('0');
   const [temp, setTemp] = useState('');
   const [isDecimal, setIsDecimal] = useState(false);
 
@@ -69,7 +69,50 @@ const Calculator = () => {
   };
 
   const handleInput = (key) => {
-    const operatorLogic = () => {
+    // reset all variables
+    const _resetCalculator = () => {
+      setOperation('');
+      setExpression('');
+      setCurrentOp('0');
+      setTemp('');
+      setIsDecimal(false);
+    };
+
+    // handle '.'
+    const _decimalLogic = () => {
+      if (!isDecimal) {
+        setCurrentOp(`${currentOp}${key}`);
+        setOperation(`${operation}${key}`);
+        setExpression(`${expression}${key}`);
+        setIsDecimal(true);
+      }
+    };
+
+    // handle '-' operator
+    const _negativeLogic = () => {
+      if (operation[operation.length - 1] === '.') {
+        return;
+      }
+      if (!temp) {
+        setTemp(key);
+        setCurrentOp(`${key}`);
+        setOperation(`${operation}${key}`);
+        if (operation.length) {
+          setExpression(`${expression} ${key} `);
+        } else {
+          setExpression(`${expression}${key}`);
+        }
+      } else if (temp && temp !== key && temp.length < 2) {
+        setCurrentOp(`${key}`);
+        setOperation(`${operation}${key}`);
+        setExpression(`${expression}${key}`);
+        setTemp(temp + key);
+      }
+      setIsDecimal(false);
+    };
+
+    // handle '+,/,*' operators
+    const _operatorLogic = () => {
       if (operation[operation.length - 1] === '.') {
         return;
       }
@@ -91,83 +134,68 @@ const Calculator = () => {
       setIsDecimal(false);
     };
 
+    // handle every other input
+    const _operandLogic = () => {
+      if (currentOp.length === 22) {
+        return;
+      }
+      if (temp) {
+        setCurrentOp(`${key}`);
+        setTemp('');
+        setOperation(`${operation}${key}`);
+        setExpression(`${expression}${key}`);
+      } else if (
+        currentOp.length === 1 &&
+        currentOp[0] === '0' &&
+        operation[operation.length - 2] !== '.'
+      ) {
+        setCurrentOp(key);
+        setOperation(`${operation.slice(0, operation.length - 1)}${key}`);
+        setExpression(`${expression.slice(0, expression.length - 1)}${key}`);
+      } else {
+        setCurrentOp(currentOp + key);
+        setOperation(`${operation}${key}`);
+        setExpression(`${expression}${key}`);
+      }
+    };
+
+    const _evaluateExpression = () => {
+      let rpn;
+      if (temp) {
+        rpn = evaluate(
+          expression.slice(0, expression.length - temp.length - 2)
+        );
+        setCurrentOp(rpn);
+        setOperation(rpn);
+        setExpression(rpn);
+      } else {
+        rpn = evaluate(expression);
+        setCurrentOp(rpn);
+        setOperation(rpn);
+        setExpression(rpn);
+      }
+    };
+
     switch (key) {
       case 'C':
-        setOperation('');
-        setExpression('');
-        setCurrentOp('');
-        setTemp('');
-        setIsDecimal(false);
+        _resetCalculator();
         break;
       case '.':
-        if (!isDecimal) {
-          setCurrentOp(`${currentOp}${key}`);
-          setOperation(`${operation}${key}`);
-          setExpression(`${expression}${key}`);
-          setIsDecimal(true);
-        }
+        _decimalLogic();
         break;
       case '+':
       case '/':
       case '*':
-        operatorLogic();
+        _operatorLogic();
         break;
       case '-':
-        if (operation[operation.length - 1] === '.') {
-          return;
-        }
-        if (!temp) {
-          setTemp(key);
-          setCurrentOp(`${key}`);
-          setOperation(`${operation}${key}`);
-          if (operation.length) {
-            setExpression(`${expression} ${key} `);
-          } else {
-            setExpression(`${expression}${key}`);
-          }
-        } else if (temp && temp !== key && temp.length < 2) {
-          setCurrentOp(`${key}`);
-          setOperation(`${operation}${key}`);
-          setExpression(`${expression}${key}`);
-          setTemp(temp + key);
-        }
-        setIsDecimal(false);
+        _negativeLogic();
         break;
       case '=':
-        let rpn;
-        if (temp) {
-          rpn = evaluate(
-            expression.slice(0, expression.length - temp.length - 2)
-          );
-          setCurrentOp(rpn);
-          setOperation(rpn);
-          setExpression(rpn);
-        } else {
-          rpn = evaluate(expression);
-          setCurrentOp(rpn);
-          setOperation(rpn);
-          setExpression(rpn);
-        }
+        _evaluateExpression();
         break;
       default:
-        if (temp) {
-          setCurrentOp(`${key}`);
-          setTemp('');
-          setOperation(`${operation}${key}`);
-          setExpression(`${expression}${key}`);
-        } else if (
-          currentOp.length === 1 &&
-          currentOp[0] === '0' &&
-          operation[operation.length - 2] !== '.'
-        ) {
-          setCurrentOp(key);
-          setOperation(`${operation.slice(0, operation.length - 1)}${key}`);
-          setExpression(`${expression.slice(0, expression.length - 1)}${key}`);
-        } else {
-          setCurrentOp(currentOp + key);
-          setOperation(`${operation}${key}`);
-          setExpression(`${expression}${key}`);
-        }
+        _operandLogic();
         break;
     }
   };

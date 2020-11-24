@@ -1,8 +1,8 @@
 const Display = ({ operation, currentOp }) => {
   return (
-    <div id="display">
+    <div id="displayScreen">
       <p id="operation">{operation}</p>
-      <h3 id="currentOp">{currentOp}</h3>
+      <h3 id="display">{currentOp}</h3>
     </div>
   );
 };

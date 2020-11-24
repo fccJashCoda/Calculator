@@ -1,30 +1,30 @@
 const keys = [
-  { display: 'C', special: 'clearBtn' },
-  { display: '/' },
-  { display: '*' },
-  { display: '7' },
-  { display: '8' },
-  { display: '9' },
-  { display: '-' },
-  { display: '4' },
-  { display: '5' },
-  { display: '6' },
-  { display: '+' },
-  { display: '1' },
-  { display: '2' },
-  { display: '3' },
-  { display: '0', special: 'zeroBtn' },
-  { display: '.' },
-  { display: '=', special: 'equalBtn' },
+  { display: 'C', id: 'clear' },
+  { display: '/', id: 'divide' },
+  { display: '*', id: 'multiply' },
+  { display: '7', id: 'seven' },
+  { display: '8', id: 'eight' },
+  { display: '9', id: 'nine' },
+  { display: '-', id: 'subtract' },
+  { display: '4', id: 'four' },
+  { display: '5', id: 'five' },
+  { display: '6', id: 'six' },
+  { display: '+', id: 'add' },
+  { display: '1', id: 'one' },
+  { display: '2', id: 'two' },
+  { display: '3', id: 'three' },
+  { display: '0', id: 'zero' },
+  { display: '.', id: 'decimal' },
+  { display: '=', id: 'equals' },
 ];
 
 const Keyboard = ({ action }) => {
   return (
     <div id="keyboard">
-      {keys.map(({ display, special }, index) => (
+      {keys.map(({ display, id }, index) => (
         <div
           key={index}
-          id={special ? special : null}
+          id={id}
           className={'button'}
           onClick={() => action(display)}
         >
