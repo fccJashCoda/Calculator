@@ -33,6 +33,13 @@ code {
   width: 15em;
   background: rgba(19, 18, 50, 1);
 
+  @media (max-width: 640px) {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+  }
+
   h1 {
     font-size: 0.7em;
     color: orange;
@@ -62,14 +69,25 @@ code {
     }
   }
 
-  #keyboard {
-    user-select: none;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(5, minmax(4em, auto));
-    height: 100%;
-    gap: 0.1em;
-    font-weight: 500;
+  #keyboard-wrapper {
+    @media (max-width: 640px) {
+      height: 100%;
+      flex: 1;
+    }
+
+    & #keyboard {
+      user-select: none;
+      display: grid;
+
+      height: 100%;
+      gap: 0.1em;
+      font-weight: 500;
+
+      @media (min-width: 641px) {
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(5, minmax(4em, auto));
+      }
+    }
   }
 }
 

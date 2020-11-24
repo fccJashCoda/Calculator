@@ -198,7 +198,9 @@ const Calculator = () => {
         <i className="fab fa-free-code-camp"></i> Calculator
       </h1>
       <Display operation={operation} currentOp={currentOp} />
-      <Keyboard action={handleInput} />
+      <div id="keyboard-wrapper">
+        <Keyboard action={handleInput} />
+      </div>
     </div>
   );
 };
