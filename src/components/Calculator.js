@@ -9,9 +9,64 @@ const Calculator = () => {
   const [temp, setTemp] = useState('');
   const [isDecimal, setIsDecimal] = useState(false);
 
-  const evaluate = (exp) => {
-    const expArray = exp.trim().split(' ');
-    console.log(expArray);
+  const evaluate = (input) => {
+    if (!input.length) return NaN;
+    const cleanExpression = input.trim().split(' ');
+    const stack = [];
+    const string = [];
+    const values = {
+      '-': 1,
+      '+': 1,
+      '/': 2,
+      '*': 2,
+    };
+
+    for (let expression of cleanExpression) {
+      if (isNaN(expression)) {
+        if (values[expression] < values[stack[stack.length - 1]]) {
+          const operator = stack.pop();
+          string.push(operator);
+          stack.push(expression);
+        } else {
+          stack.push(expression);
+        }
+      } else {
+        string.push(expression);
+      }
+    }
+
+    while (stack.length) {
+      const operator = stack.pop();
+      string.push(operator);
+    }
+
+    for (let expression of string) {
+      console.log('expression', expression);
+      if (isNaN(expression)) {
+        let result;
+        let first = stack.pop();
+        let second = stack.pop();
+        switch (expression) {
+          case '+':
+            result = second + first;
+            break;
+          case '-':
+            result = second - first;
+            break;
+          case '*':
+            result = second * first;
+            break;
+          case '/':
+            result = second / first;
+            break;
+        }
+        stack.push(result);
+      } else {
+        stack.push(Number(expression));
+      }
+    }
+
+    return String(stack[0]);
   };
 
   const handleInput = (key) => {
@@ -94,7 +149,11 @@ const Calculator = () => {
           setTemp('');
           setOperation(`${operation}${key}`);
           setExpression(`${expression}${key}`);
-        } else if (currentOp.length === 1 && currentOp[0] === '0') {
+        } else if (
+          currentOp.length === 1 &&
+          currentOp[0] === '0' &&
+          operation[operation.length - 2] !== '.'
+        ) {
           setCurrentOp(key);
           setOperation(`${operation.slice(0, operation.length - 1)}${key}`);
           setExpression(`${expression.slice(0, expression.length - 1)}${key}`);
@@ -106,8 +165,7 @@ const Calculator = () => {
         break;
     }
   };
-  console.log(expression);
-  console.log('current', currentOp);
+
   return (
     <div id="calculator">
       <h1>
