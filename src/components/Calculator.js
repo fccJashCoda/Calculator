@@ -51,7 +51,7 @@ const Calculator = () => {
             result = second + first;
             break;
           case '-':
-            result = second - first;
+            result = first - second;
             break;
           case '*':
             result = second * first;
@@ -135,12 +135,19 @@ const Calculator = () => {
         setIsDecimal(false);
         break;
       case '=':
+        let rpn;
         if (temp) {
-          console.log(
-            evaluate(expression.slice(0, expression.length - temp.length - 2))
+          rpn = evaluate(
+            expression.slice(0, expression.length - temp.length - 2)
           );
+          setCurrentOp(rpn);
+          setOperation(rpn);
+          setExpression(rpn);
         } else {
-          console.log(evaluate(expression));
+          rpn = evaluate(expression);
+          setCurrentOp(rpn);
+          setOperation(rpn);
+          setExpression(rpn);
         }
         break;
       default:
