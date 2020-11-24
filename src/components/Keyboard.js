@@ -27,6 +27,7 @@ const Keyboard = ({ action }) => {
           id={id}
           className={'button'}
           onClick={() => action(display)}
+          // onClick={() => action(display)}
         >
           {display}
         </div>
