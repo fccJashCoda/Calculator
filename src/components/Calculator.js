@@ -39,23 +39,22 @@ const Calculator = () => {
     }
 
     for (let expression of string) {
-      console.log('expression', expression);
       if (isNaN(expression)) {
         let result;
-        let first = stack.pop();
-        let second = stack.pop();
+        let top = stack.pop();
+        let bottom = stack.pop();
         switch (expression) {
           case '+':
-            result = second + first;
+            result = bottom + top;
             break;
           case '-':
-            result = first - second;
+            result = bottom - top;
             break;
           case '*':
-            result = second * first;
+            result = bottom * top;
             break;
           case '/':
-            result = second / first;
+            result = bottom / top;
             break;
           default:
             break;
