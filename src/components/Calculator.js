@@ -23,13 +23,11 @@ const Calculator = () => {
 
     for (let expression of cleanExpression) {
       if (isNaN(expression)) {
-        if (values[expression] < values[stack[stack.length - 1]]) {
+        while (values[expression] <= values[stack[stack.length - 1]]) {
           const operator = stack.pop();
           string.push(operator);
-          stack.push(expression);
-        } else {
-          stack.push(expression);
         }
+        stack.push(expression);
       } else {
         string.push(expression);
       }
@@ -58,6 +56,8 @@ const Calculator = () => {
             break;
           case '/':
             result = second / first;
+            break;
+          default:
             break;
         }
         stack.push(result);
